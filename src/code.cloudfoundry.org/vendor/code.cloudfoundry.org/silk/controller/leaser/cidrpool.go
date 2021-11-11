@@ -3,11 +3,12 @@ package leaser
 import (
 	cryptoRand "crypto/rand"
 	"fmt"
-	"github.com/ziutek/utils/netaddr"
 	"math"
 	"math/big"
 	mathRand "math/rand"
 	"net"
+
+	"github.com/ziutek/utils/netaddr"
 )
 
 type CIDRPool struct {
@@ -16,7 +17,7 @@ type CIDRPool struct {
 }
 
 func NewCIDRPool(subnetRange string, subnetMask int) *CIDRPool {
-	_, ipCIDR, err := net.ParseCIDR(subnetRange)
+	ip, ipCIDR, err := net.ParseCIDR(subnetRange)
 	if err != nil {
 		panic(err)
 	}
@@ -25,16 +26,16 @@ func NewCIDRPool(subnetRange string, subnetMask int) *CIDRPool {
 	mathRand.Seed(getRandomSeed())
 
 	return &CIDRPool{
-		blockPool:  generateBlockPool(ipCIDR.IP, uint(cidrMask), uint(subnetMask)),
-		singlePool: generateSingleIPPool(ipCIDR.IP, uint(subnetMask)),
+		blockPool:  generateBlockPool(ip, uint(cidrMask), uint(subnetMask)),
+		singlePool: generateSingleIPPool(ip, uint(subnetMask)),
 	}
 }
 
-func (c *CIDRPool) GetBlockPool() map[string] struct{} {
+func (c *CIDRPool) GetBlockPool() map[string]struct{} {
 	return c.blockPool
 }
 
-func (c *CIDRPool) GetSinglePool() map[string] struct{} {
+func (c *CIDRPool) GetSinglePool() map[string]struct{} {
 	return c.singlePool
 }
 
