@@ -114,5 +114,7 @@ properties:
       Has no effect when `outbound_connections.limit` is false.
 
   outbound_connections.dry_run:
-    description: "Introduce the options of a dry-run mode. Default: false"
+    description: |
+      Introduce the option of a dry-run mode. Will be used with `outbound_connections.limit` and `iptables_logging` turned on in order to log, and not reject,
+      connection packets whenever apss are rate-limited. Default: false
     default: false
