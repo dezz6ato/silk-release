@@ -111,7 +111,11 @@ func LoadWrapperConfig(bytes []byte) (*WrapperConfig, error) {
 		if !n.OutConn.Limit {
 			return nil, fmt.Errorf("invalid rate-limiting value in dry-run mode")
 		}
+		if !n.OutConn.Logging {
+			return nil, fmt.Errorf("invalid logging vaule in dry-run mode")
+		}
 	}
+
 	validator.Validate(n)
 
 	return n, nil
