@@ -786,7 +786,25 @@ var _ = Describe("Netout", func() {
 				 chainNamer.PostfixReturnsOnCall(1, "netout-some-container-handle-rl-log", nil)
 			})
 
-			It("clears the rate")
+			It("clears the rate limit logging chain", func() {
+				err := netOut.Cleanup()
+				Expect(err).NotTo(HaveOccurred())
+				Expect(ipTables.ClearChainCallCount()).To(Equal(5))
+
+				table, chain := ipTables.ClearChainArgsForCall(4)
+				Expect(table).To(Equal("filter"))
+				Expect(chain).To(Equal("netout-some-container-handle-rl-log"))
+			})
+
+			It("deletes the rate limit logging chain", func() {
+				err := netOut.Cleanup()
+				Expect(err).NotTo(HaveOccurred())
+				Expect(ipTables.DeleteChainCallCount()).To(Equal(5))
+
+				table, chain := ipTables.DeleteChainArgsForCall(4)
+				Expect(table).To(Equal("filter"))
+				Expect(chain).To(Equal("netout-some-container-handle-rl-log"))
+			})
 		})
 	})
 
