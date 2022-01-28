@@ -151,7 +151,6 @@ func cmdAdd(args *skel.CmdArgs) error {
 			Logging:    cfg.OutConn.Logging,
 			Burst:      cfg.OutConn.Burst,
 			RatePerSec: cfg.OutConn.RatePerSec,
-			DryRun:     cfg.OutConn.DryRun,
 		},
 	}
 	if err := netOutProvider.Initialize(); err != nil {
