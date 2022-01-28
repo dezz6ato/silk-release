@@ -101,11 +101,6 @@ properties:
     default: false
     description: "EXPERIMENTAL: Enables outbound connections count limiting per port on destination host per container."
 
-  outbound_connections.logging:
-    default: false
-    description: |
-      TODO: Add a description...
-
   outbound_connections.burst:
     default: 1000
     description: |
