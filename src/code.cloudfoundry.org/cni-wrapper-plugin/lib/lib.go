@@ -3,7 +3,6 @@ package lib
 import (
 	"encoding/json"
 	"fmt"
-
 	"code.cloudfoundry.org/lib/rules"
 
 	"code.cloudfoundry.org/garden"
@@ -29,7 +28,6 @@ type OutConnConfig struct {
 	Logging    bool `json:"logging"`
 	Burst      int  `json:"burst" validate:"min=1"`
 	RatePerSec int  `json:"rate_per_sec" validate:"min=1"`
-	DryRun     bool `json:"dry_run"`
 }
 
 type WrapperConfig struct {
@@ -105,15 +103,6 @@ func LoadWrapperConfig(bytes []byte) (*WrapperConfig, error) {
 
 	if n.OutConn.RatePerSec <= 0 {
 		return nil, fmt.Errorf("invalid outbound connection rate")
-	}
-
-	if n.OutConn.DryRun {
-		if !n.OutConn.Limit {
-			return nil, fmt.Errorf("invalid rate-limiting value in dry-run mode")
-		}
-		if !n.OutConn.Logging {
-			return nil, fmt.Errorf("invalid logging value in dry-run mode")
-		}
 	}
 
 	validator.Validate(n)

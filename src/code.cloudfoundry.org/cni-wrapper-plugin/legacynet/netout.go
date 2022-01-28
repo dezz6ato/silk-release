@@ -28,7 +28,6 @@ type OutConn struct {
 	Logging    bool
 	Burst      int
 	RatePerSec int
-	DryRun     bool
 }
 
 type NetOut struct {
@@ -179,7 +178,7 @@ func (m *NetOut) defaultNetOutRules() ([]IpTablesFullChain, error) {
 
 	args = append(args, logChain)
 
-	if m.Conn.Limit {
+	if m.Conn.Limit && m.Conn.Logging {
 		rateLimitLogChain, err := m.connRateLimitLogChain(forwardChainName)
 		if err != nil {
 			return []IpTablesFullChain{}, fmt.Errorf("getting chain name: %s", err)
@@ -336,12 +335,9 @@ func (m *NetOut) rateLimitExpiryPeriod() string {
 }
 
 func (m *NetOut) connRateLimitLogChain(forwardChainName string) (IpTablesFullChain, error) {
-	logRules := []rules.IPTablesRule{}
-	if m.Conn.Logging {
-		logRules = append(logRules, rules.NewNetOutConnRateLimitRejectLogRule(m.ContainerHandle, m.DeniedLogsPerSec))
-	}
-	if !m.Conn.DryRun {
-		logRules = append(logRules, rules.NewNetOutDefaultRejectRule())
+	logRules := []rules.IPTablesRule{
+		rules.NewNetOutConnRateLimitRejectLogRule(m.ContainerHandle, m.DeniedLogsPerSec),
+		rules.NewNetOutDefaultRejectRule(),
 	}
 	return m.netOutLogChain(forwardChainName, suffixNetOutRateLimitLog, logRules)
 }
